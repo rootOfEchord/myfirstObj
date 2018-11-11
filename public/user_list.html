@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会员账号管理</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>账号管理</span>
+                </div>
+                <div class="text item">
+                    <!-- 表格 -->
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column prop="userName" label="用户名称">
+                        </el-table-column>
+                        <el-table-column prop="userGroup" label="用户组">
+                        </el-table-column>
+                        <el-table-column label="管理">
+                            <template slot-scope="scope">
+                                <el-button type="primary" plain size="mini" @click="handleEdit(scope.$index, scope.row)">
+                                    <i class="el-icon-edit"></i>
+                                </el-button>
+                                <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    userGroup: '',
+                    tableData: []
+                }
+            },
+            methods: {
+                //修改用户
+                handleEdit(index, row) {
+                    if(this.userGroup === '超级管理员'){
+                        //点击后将该条数据id传给修改页面
+                        location.href = '/edit_manage_account.html?userid='+row.id;
+                        location.hash = row.id;
+                    }else{
+                        this.open({isOk: false,msg: '您没有该权限'});
+                    }
+                },
+                //删除用户
+                handleDelete(index, row) {
+                    if(this.userGroup === '超级管理员'){
+                        $.get('/users/delUser/' + row.id, (data) => {
+                            //弹出提示框
+                            this.open(data);
+                            if (data.isOk) {
+                                //成功 刷新表格
+                                this.getUserList();
+                                // location.href = './edit_mange_account.html';
+                            }
+                        })
+                    }else{
+                        this.open({isOk: false,msg: '您没有该权限'});
+                    }
+                },
+                //渲染表格函数
+                getUserList(){
+                    $.get('/users/getUserList', (data) => {
+                    this.tableData = data;
+                    })
+                },
+                open(data){
+                    this.$message({ message: decodeURI(data.msg), type: data.isOk? 'success':'error' , center: true });
+                }
+            },
+            mounted() {
+                //渲染表格
+                this.getUserList();
+                //接收上个页面的参数并弹出提示框
+                let msg = location.href.split('=')[1];
+                if(msg){
+                    this.open({mag: decodeURI(msg),isOk: true});
+                }
+                //获取用户等级
+                $.get('/users/getUserInfo',(data)=>{
+                    this.userGroup = decodeURI(data.group);
+                })
+            }
+        })
+
+    </script>
+</body>
+
+</html>

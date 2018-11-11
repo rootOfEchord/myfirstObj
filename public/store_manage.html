@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品管理</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+    .el-pagination {
+        margin-top: 30px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <!-- 卡片头部 -->
+                <div slot="header" class="clearfix">
+                    <span>商品管理</span>
+                </div>
+                <!-- 卡片身体 -->
+                <div class="text item">
+                    <!-- 搜索表单 -->
+                    <el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+                        <el-form-item>
+                            <el-select v-model="formInline.region" placeholder="---选择分类---">
+                                <el-option label="区域一" value="shanghai"></el-option>
+                                <el-option label="区域二" value="beijing"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="关键字:">
+                            <el-input v-model="formInline.user" placeholder="商品名称,条形码"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <div style="height: 2px;border: 1px solid #ccc"></div>
+                    <!-- 表格 -->
+                    <el-table :data="tableData" style="width: 100%">
+                        <el-table-column prop="tiaoxinma" label="商品条形码" width="180">
+                        </el-table-column>
+                        <el-table-column prop="goodsName" label="商品名称" width="180">
+                        </el-table-column>
+                        <el-table-column prop="joinPrice" label="进价(元)">
+                        </el-table-column>
+                        <el-table-column prop="joinSum" label="入库">
+                        </el-table-column>
+                        <el-table-column prop="store" label="库存">
+                        </el-table-column>
+                        <el-table-column prop="sellSum" label="已售">
+                        </el-table-column>
+                        <el-table-column label="管理">
+                            <template slot-scope="scope">
+                                <el-button type="primary" plain size="mini" @click="handleEdit(scope.$index, scope.row)">
+                                    <i class="el-icon-edit"></i>
+                                </el-button>
+                                <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">
+                                    <i class="el-icon-delete"></i>
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <!-- 分页 -->
+                    <el-pagination background layout="prev, pager, next" :total="1000">
+                    </el-pagination>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    formInline: {
+                        user: '',
+                        region: ''
+                    },
+                    tableData: [{
+                        tiaoxinma: '456978787',
+                        goodsName: '香皂',
+                        joinPrice: '8',
+                        joinSum: '45',
+                        store: '12',
+                        sellSum: '33',
+                    },
+                    ],
+                }
+            },
+            methods: {
+                onSubmit() {
+                    console.log('submit!');
+                },
+                handleEdit(index, row) {
+                    console.log(index, row);
+                },
+                handleDelete(index, row) {
+                    console.log(index, row);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

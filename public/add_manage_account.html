@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+    .el-form {
+        width: 420px;
+    }
+
+    .el-form-item__label {
+        line-height: 100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>添加管理账号</span>
+                </div>
+                <div class="text item">
+                    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
+                        <el-form-item label="用户名" prop="userName">
+                            <el-input v-model="ruleForm2.userName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码" prop="pass">
+                            <el-input type="password" v-model="ruleForm2.pass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="checkPass">
+                            <el-input type="password" v-model="ruleForm2.checkPass" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="选择用户组" prop="userGroup">
+                            <el-select v-model="ruleForm2.userGroup" placeholder="请选择">
+                                <el-option v-for="item in userGroupName" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                //验证两次密码是否一致
+                var validatePass2 = (rule, value, callback) => {
+                    if (value !== this.ruleForm2.pass) {
+                        callback(new Error('两次输入密码不一致!'));
+                    } else {
+                        callback();
+                    }
+                };
+                return {
+                    userGroup: '',
+                    labelPosition: 'top',   //设置label的位置
+                    userGroupName: [
+                        { value: '超级管理员', label: '超级管理员' },
+                        { value: '管理员', label: '管理员' },
+                        { value: '普通用户', label: '普通用户' },
+                    ],
+                    ruleForm2: {
+                        userName: '',
+                        pass: '',
+                        checkPass: '',
+                        userGroup: ''
+                    },
+                    rules2: {
+                        userName: [
+                            { required: true, message: '请输入用户名', trigger: 'blur' },
+                        ],
+                        pass: [
+                            { required: true, message: '请输入密码', trigger: 'blur' },
+                            { min: 4, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' },
+                            { min: 4, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur' }
+                        ],
+                        checkPass: [
+                            { required: true, message: '请再次输入密码', trigger: 'blur' },
+                            { validator: validatePass2, trigger: 'blur' }
+                        ],
+                        userGroup: [
+                            { required: true, message: '请选择用户组', trigger: 'change' }
+                        ]
+                    }
+                };
+            },
+            methods: {
+                //提交表单函数
+                submitForm(formName) {
+                    if (this.userGroup === '超级管理员') {
+                        this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                //验证成功后向后台发送ajax
+                                $.post('/users/addManageAccount', this.ruleForm2, (data) => {
+                                    //弹出提示框
+                                    this.open(data)
+                                    if (data) {
+                                        //成功清空表单
+                                        this.resetForm('ruleForm2');
+                                    }
+                                })
+                            } else {
+                                //提示框
+                                this.open({ isOk: false, msg: '添加失败请检查' });
+                                return false;
+                            }
+                        });
+                    }else{
+                        this.open({isOk: false,msg: '您没有该权限'});
+                    }
+                },
+                //清空表单函数
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                //弹出提示框函数
+                open(data) {
+                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
+                }
+
+            },
+            mounted() {
+                //获取用户等级
+                $.get('/users/getUserInfo', (data) => {
+                    this.userGroup = decodeURI(data.group);
+                })
+            }
+        })
+
+    </script>
+</body>
+
+</html>

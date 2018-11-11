@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    <span>分类管理</span>
+                </div>
+                <div class="text item">
+                    <template>
+                        <el-table :data="tableData" stripe style="width: 100%">
+                            <el-table-column prop="goodsGroup" label="分类名称">
+                            </el-table-column>
+                            <el-table-column label="管理" width="180">
+                                    <template slot-scope="scope">
+                                <el-button type="primary" plain size="mini" @click="handleEdit(scope.$index, scope.row)">
+                                    <i class="el-icon-edit"></i>
+                                </el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                tableData: [{
+                    goodsGroup: '护肤品',
+                }, {
+                    goodsGroup: '厨房用品',
+                },
+                {
+                    goodsGroup: '床上用品',
+                }],
+            },
+            methods: {
+                handleEdit(index, row) {
+                    console.log(index, row);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

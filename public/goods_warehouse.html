@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品入库</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+    .el-input {
+        width: 300px;
+    }
+
+    .el-form-item__label {
+        line-height: 100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <!-- 卡片头部 -->
+                <div slot="header" class="clearfix">
+                    <span>商品入库</span>
+                </div>
+                <!-- 卡片身体 -->
+                <div class="text item">
+                    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
+
+                        <el-form-item label="商品条形码" prop="tiaoxinma">
+                            <el-input v-model="ruleForm2.tiaoxinma"></el-input>
+                        </el-form-item>
+                        <el-form-item label="数量" prop="joinSum">
+                            <el-input v-model="ruleForm2.joinSum"></el-input>
+                            <br><span class="form-msg">计重商品单位为kg</span>
+                        </el-form-item>
+                        <el-form-item label="进价" prop="joinPrice">
+                            <el-input v-model="ruleForm2.joinPrice"></el-input>&emsp;元
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">添加</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    labelPosition: 'top',   //设置label的位置
+                    ruleForm2: {
+                        tiaoxinma: '',
+                        joinSum: '',
+                        joinPrice: ''
+                    },
+                    rules2: {
+                        tiaoxinma: [
+                            { required: true, message: '请输入条形码', trigger: 'blur' },
+                        ],
+                        joinSum: [
+                            { required: true, message: '请输入数量', trigger: 'blur' },
+                        ],
+                        joinPrice: [
+                            { required: true, message: '请输入进价', trigger: 'blur' },
+                        ],
+                    }
+                };
+            },
+            methods: {
+                //提交表单函数
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            //验证成功后向后台发送ajax
+                            $.post('/', this.ruleForm2, (data) => {
+                                console.log(data)
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                handleEdit(index, row) {
+                    console.log(index, row);
+                },
+                handleDelete(index, row) {
+                    console.log(index, row);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

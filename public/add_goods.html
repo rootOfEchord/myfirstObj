@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+    <style>
+        .el-input {
+            width: 300px;
+        }
+        .el-form-item__label{
+            line-height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <!-- 主体表格头部 -->
+                <div slot="header" class="clearfix card-head">
+                    <span>添加商品</span>
+                </div>
+                <!-- 主体表格内容 -->
+                <div class="text item">
+                    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
+                        <el-form-item label="所属分类" prop="soft">
+                            <el-select v-model="ruleForm2.soft" placeholder="请选择">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="商品条形码" prop="tiaoxingma">
+                            <el-input v-model="ruleForm2.tiaoxingma" placeholder="请输入内容"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品名称" prop="goodsName">
+                            <el-input v-model="ruleForm2.goodsName" placeholder="请输入内容"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品售价" prop="goodsPrice">
+                            <el-input v-model="ruleForm2.goodsPrice" placeholder="请输入内容"></el-input>&emsp;元
+                        </el-form-item>
+                        <el-form-item label="市场价">
+                            <el-input v-model="ruleForm2.marketPrice" placeholder="请输入内容"></el-input>&emsp;元
+                            <br>
+                            <span class="form-msg">默认市场价为售价的1.2倍</span>
+                        </el-form-item>
+                        <el-form-item label="商品进价">
+                            <el-input v-model="ruleForm2.joinPrice" placeholder="请输入内容"></el-input>元
+                        </el-form-item>
+                        <el-form-item label="入库数量">
+                            <el-input v-model="ruleForm2.joinSum" placeholder="请输入内容"></el-input>
+                            <br>
+                            <span class="form-msg">计重商品单位为kg</span>
+                        </el-form-item>
+                        <el-form-item label="商品重量">
+                            <el-input v-model="ruleForm2.goodsWeight" placeholder="请输入内容"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品单位">
+                            <el-input v-model="ruleForm2.goodsUnit" placeholder="请输入内容"></el-input>
+                        </el-form-item>
+                        <el-form-item label="会员优惠">
+                            <el-radio v-model="ruleForm2.vipIsDiscount" label="1">享受</el-radio>
+                            <el-radio v-model="ruleForm2.vipIsDiscount" label="2">不享受</el-radio>
+                        </el-form-item>
+                        <el-form-item label="是否促销">
+                            <el-radio v-model="ruleForm2.isPromotion" label="1">启用</el-radio>
+                            <el-radio v-model="ruleForm2.isPromotion" label="2">禁用</el-radio>
+                        </el-form-item>
+
+                        <el-form-item label="商品简介">
+                            <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入内容" v-model="ruleForm2.goodsIntro">
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                            <el-button @click="resetForm('ruleForm2')">重置</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    labelPosition: 'top',
+                    ruleForm2: {
+                        soft: '',
+                        tiaoxingma: '',
+                        goodsName: '',
+                        goodsPrice: '',
+                        marketPrice: '',
+                        joinPrice: '',
+                        joinSum: '',
+                        goodsWeight: '',
+                        goodsUnit: '',
+                        vipIsDiscount: '',
+                        isPromotion: '',
+                        goodsIntro: ''
+                    },
+                    options: [  //下拉框的下拉选项
+                        {
+                            value: '1',
+                            label: '选项一'
+                        },
+                        {
+                            value: '2',
+                            label: '选项二'
+                        },
+                        {
+                            value: '3',
+                            label: '选项三'
+                        },
+                        {
+                            value: '4',
+                            label: '选项四'
+                        },
+                    ],
+                    rules2: {   //from表单前四个做非空验证
+                        soft: [
+                            { required: true, message: '请选择商品种类', trigger: 'blur'},
+                        ],
+                        tiaoxingma: [
+                            { required: true, message: '请输入条形码', trigger: 'blur'},
+                        ],
+                        goodsName: [
+                            { required: true, message: '请输入名字', trigger: 'blur'},
+                        ],
+                        goodsPrice: [
+                            { required: true, message: '请输入价格', trigger: 'blur'},
+                        ],
+                    }
+                };
+            },
+            methods: {
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            alert('submit!');
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

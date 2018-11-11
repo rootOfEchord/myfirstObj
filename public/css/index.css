@@ -1,0 +1,128 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+    color: #d1d0cf;
+}
+b{
+    margin: 0 10px;
+    font-weight: 100;
+    font-size: 14px;
+}
+html,body,#app,.el-container{
+    height: 100%;
+}
+
+
+.el-header, .el-footer {
+    background-color: #f2f2f2;
+    color: #333;
+    line-height: 30px;
+
+  }
+  .el-header h2{
+      margin-top: 40px;
+    }
+    /* 左侧菜单样式 */
+  .el-aside {
+    background: url('../images/left_bg.png');
+    color: #333;
+  }
+  .el-aside h1{
+      font-size: 24px;
+      color: #d1d0cf;
+      margin: 50px 8px;
+      text-align: center;
+  }
+  .el-aside p{
+    color: #d1d0cf;
+    margin: 24px 14px;
+    text-align: right;
+    font-size: 14px;
+  }
+ .el-menu{
+    background: none;
+    color:#fff;
+    border: 0;
+
+}
+.el-submenu__title{
+  margin: 10px 0 10px 20px;
+  height: 33px;
+  line-height: 32px;
+  background: url('../images/menu_bg.png');
+  color: #fff;
+  text-align: right;
+  border-radius: 4px 0 0 4px;
+  overflow: hidden;
+}
+.el-submenu .el-menu-item {
+    color: #9eaaaa;
+    text-align: right;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 20px;
+}
+.el-menu-item a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding-right: 20px;
+}
+.el-submenu.is-opened .el-submenu__title{
+    background: url('../images/menu_bgOver.png');
+    color: #000;
+}
+.el-menu-item.is-active a ,.el-menu-item:hover a{
+    color: #f60;
+}
+.el-menu-item:focus, .el-menu-item:hover{
+    background-color: transparent;
+}
+.el-submenu__icon-arrow{
+    display: none;
+}
+.el-menu-item.is-active::after{
+    content: '';
+    display: block;
+    position: absolute;
+    border:6px solid #fff;
+    border-color: transparent #f60 transparent transparent;
+    right: 0;
+    top: 8px;
+}
+  /* 右侧主体部分 */
+  .el-main {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  .el-card__header{
+    height: 42px;
+    background: url('../images/cardTitleBg.png') ;
+    line-height: 42px;
+    padding: 0 20px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .el-footer{
+    line-height: 50px;
+    font-size: 12px;
+  }
+  .el-alert{
+      padding: 10px 16px;
+      background: #dbe3ff;
+  }
+  .el-alert i{
+      color: #264ab4;
+  }
+  #aleartMsg{
+      margin: 16px 0;
+      color: #57a000;
+  }
+  .el-table thead{
+      font-size: 16px;
+      color: #555;
+  }
+ 
