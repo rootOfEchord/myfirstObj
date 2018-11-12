@@ -32,15 +32,15 @@
                 <div class="text item">
                     <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
 
-                        <el-form-item label="商品条形码" prop="tiaoxinma">
-                            <el-input v-model="ruleForm2.tiaoxinma"></el-input>
+                        <el-form-item label="商品条形码" prop="barcode">
+                            <el-input v-model="ruleForm2.barcode"></el-input>
                         </el-form-item>
-                        <el-form-item label="数量" prop="joinSum">
-                            <el-input v-model="ruleForm2.joinSum"></el-input>
+                        <el-form-item label="数量" prop="stockNum">
+                            <el-input v-model="ruleForm2.stockNum"></el-input>
                             <br><span class="form-msg">计重商品单位为kg</span>
                         </el-form-item>
-                        <el-form-item label="进价" prop="joinPrice">
-                            <el-input v-model="ruleForm2.joinPrice"></el-input>&emsp;元
+                        <el-form-item label="进价" prop="goodsPrice">
+                            <el-input v-model="ruleForm2.goodsPrice"></el-input>&emsp;元
                         </el-form-item>
 
                         <el-form-item>
@@ -66,9 +66,9 @@
                 return {
                     labelPosition: 'top',   //设置label的位置
                     ruleForm2: {
-                        tiaoxinma: '',
-                        joinSum: '',
-                        joinPrice: ''
+                        barcode: '',
+                        stockNum: null,
+                        goodsPrice: null
                     },
                     rules2: {
                         tiaoxinma: [
@@ -89,8 +89,11 @@
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             //验证成功后向后台发送ajax
-                            $.post('/', this.ruleForm2, (data) => {
-                                console.log(data)
+                            $.post('/goods/addStock', this.ruleForm2, (data) => {
+                                this.open(data);
+                                if(data.isOk){
+                                    this.resetForm('ruleForm2')
+                                }
                             })
                         } else {
                             console.log('error submit!!');
@@ -101,12 +104,9 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 },
-                handleEdit(index, row) {
-                    console.log(index, row);
+                open(data) {
+                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
                 },
-                handleDelete(index, row) {
-                    console.log(index, row);
-                }
             }
         })
 

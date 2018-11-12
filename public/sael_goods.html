@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品入库</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+    .el-input {
+        width: 300px;
+    }
+
+    .el-form-item__label {
+        line-height: 100%;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <!-- 卡片头部 -->
+                <div slot="header" class="clearfix">
+                    <span>商品入库</span>
+                </div>
+                <!-- 卡片身体 -->
+                <div class="text item">
+                    <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
+
+                        <el-form-item label="商品条形码" prop="barcode">
+                            <el-input v-model="ruleForm2.barcode"></el-input>
+                        </el-form-item>
+                        <el-form-item label="数量" prop="saelNum">
+                            <el-input v-model="ruleForm2.saelNum"></el-input>
+                            <span class="form-msg" style="margin-left: 16px">计重商品单位为kg</span>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="submitForm('ruleForm2')" size="mini">加入订单</el-button>
+                            <el-button @click="resetForm('ruleForm2')" size="mini">重新出库</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <!-- 表格 -->
+                    <el-table :data="tableData" style="width: 100%" stripe>
+                        <el-table-column prop="goodsname" label="商品名称" width="180">
+                        </el-table-column>
+                        <el-table-column prop="saelNum" label="数量" width="180">
+                        </el-table-column>
+                        <el-table-column label="单价(元)">
+                                <template slot-scope="scope">
+                                        <span> {{ scope.row.saleprice | formatPrice}}</span>
+                                    </template>
+                        </el-table-column>
+                        <el-table-column  label="总价(元)">
+                                <template slot-scope="scope">
+                                        <span> {{ (scope.row.saelNum * scope.row.saleprice) | formatPrice}}</span>
+                                    </template>
+                        </el-table-column>
+                        <!-- <el-table-column label="库存">
+                            <template slot-scope="scope">
+                                <span> {{ scope.row.stockNum - scope.row.saleNum }}</span>
+                            </template>
+                        </el-table-column> -->
+                    </el-table>
+                    <p>总价: {{allPrice | formatPrice}} 元</p>
+                    <el-button type="primary" @click="shopping" size="mini">确认提交</el-button>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    allPrice: 0,
+                    labelPosition: 'top',   //设置label的位置
+                    ruleForm2: {
+                        barcode: '',
+                        saelNum: null
+                    },
+                    tableData: [],
+                    rules2: {
+                        barcode: [
+                            { required: true, message: '请输入条形码', trigger: 'blur' },
+                        ],
+                        saelNum: [
+                            { required: true, message: '请输入数量', trigger: 'blur' },
+                        ],
+                    }
+                };
+            },
+            methods: {
+                //提交表单函数
+                submitForm(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            //向后台发送该商品条形码 获取到商品的售价和名字
+                            $.post('/goods/getOneGood',{barcode: this.ruleForm2.barcode},(data)=>{
+                                //生成一个表格对象 push到tableData中
+                                let subTable = {'goodsname':data[0].goodsname ,'saelNum': this.ruleForm2.saelNum,'saleprice': data[0].saleprice,'barcode': this.ruleForm2.barcode};
+                                this.tableData.push(subTable);
+                                this.open({isOk: true,msg: '添加成功'});
+                                this.resetForm('ruleForm2');
+                                //渲染总价
+                                let allPrice = 0;
+                                this.tableData.forEach((v,i)=>{
+                                    allPrice +=v.saleprice*v.saelNum;
+                                });
+                                this.allPrice = allPrice;
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                //提交订单
+                shopping(){
+                    //将商品表格发给后台
+                    $.ajaxSettings.async = false;
+                    this.tableData.forEach(v=>{
+                        $.post('/goods/shop',v,(data)=>{
+                            if(!data.isOk){
+                                this.open({isOk: false,msg: '提交失败'});
+                            }
+                        })
+                    });
+                    this.open({isOk: false,msg: '提交失败'});
+                    $.ajaxSettings.async = true;
+                },
+                //重置表单
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                // 弹出提示框函数
+                open(data) {
+                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
+                },
+            },
+            filters: {
+                //过滤器做一个管道格式化价格
+                formatPrice(price) {
+                    return price.toFixed(2);
+                }
+            }
+        })
+
+    </script>
+</body>
+
+</html>

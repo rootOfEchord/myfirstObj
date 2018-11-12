@@ -41,7 +41,7 @@
                             </template>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                            <el-button type="primary" @click="submitForm('ruleForm2')">修改</el-button>
                             <el-button @click="resetForm('ruleForm2')">重置</el-button>
                         </el-form-item>
                     </el-form>
@@ -64,12 +64,13 @@
                 return {
                     labelPosition: 'top',   //设置label的位置
                     ruleForm2: {
-                        cg_fatherID: '0',
+                        cg_fatherID: 0,
                         cg_name: '',
-                        cg_isLocked: '0'
+                        cg_isLocked: '0',
+                        cg_id: 0,
                     },
                     options: [
-                        { cg_id: '0', cg_name: '---顶级分类---' }
+                        { cg_id: 0, cg_name: '---顶级分类---' }
                     ],
                     rules2: {
                         cg_name: [
@@ -84,12 +85,10 @@
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             //验证成功后向后台发送ajax
-                            $.post('/goods/addSoft', this.ruleForm2, (data) => {
+                            $.post('/goods/edit_soft', this.ruleForm2, (data) => {
                                 this.open(data);
                                 if (data.isOk) {
-                                    this.resetForm('ruleForm2');
-                                    this.options = [{ cg_id: '0', cg_name: '---顶级分类---' }]
-                                    this.getSoft();
+                                   location.href = '/goods_soft.html?msg='+data.msg
                                 }
                             })
                         } else {
@@ -114,10 +113,16 @@
                     $.get('/goods/getSoftList',(data)=>{
                         this.options.push(...data);
                     })
-                }
+                },
             },
             mounted() {
                 this.getSoft();
+                let id = location.href.split('=')[1];
+                    $.get('/goods/getOneSoft',{id},(data)=>{
+                        this.ruleForm2 = data[0];
+                        this.ruleForm2.cg_isLocked = this.ruleForm2.cg_isLocked.toString();
+                })
+                
             }
         });
 

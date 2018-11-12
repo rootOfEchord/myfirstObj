@@ -14,11 +14,8 @@
     .el-pagination {
         margin-top: 30px;
     }
-    .f-red{
-        color: red;
-    }
-    .f-555{
-        color: #555;
+    .el-select{
+        width: 178px;
     }
 </style>
 
@@ -34,12 +31,19 @@
                 <div class="text item">
                     <!-- 搜索表单 -->
                     <el-form :inline="true" :model="search" class="demo-form-inline" size="mini">
+                        <el-form-item label="">
+                            <el-input v-model="search.startTime" placeholder="开始时间"></el-input>
+                        </el-form-item>
+                        <el-form-item label=": 开始时间&emsp;结束时间 :">
+                            <el-input v-model="search.endTime" placeholder="结束时间"></el-input>
+                        </el-form-item><span style="line-height: 28px; font-size: 14px;color: #999;">格式: (2012-01-01)</span>
+                        <br>
                         <el-form-item>
                             <el-select v-model="search.soft" placeholder="---选择分类---">
                                 <el-option v-for="item in options" :label="item.cg_name" :value="item.cg_id" :key="item.cg_id">
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="关键字:">
+                        <el-form-item label="关键字 :">
                             <el-input v-model="search.keyWords" placeholder="商品名称,条形码"></el-input>
                         </el-form-item>
                         <el-form-item>
@@ -49,20 +53,17 @@
                     <div style="height: 2px;border: 1px solid #ccc"></div>
                     <!-- 表格 -->
                     <el-table :data="tableData" style="width: 100%">
-                        <el-table-column prop="barcode" label="商品条形码" width="180">
+                        <el-table-column prop="order" label="订单号" width="180">
                         </el-table-column>
-                        <el-table-column prop="goodsname" label="商品名称" width="180">
+                        <el-table-column prop="sum" label="数量" width="180">
                         </el-table-column>
-                        <el-table-column prop="goodsprice" label="进价(元)" class-name="f-red" label-class-name="f-555">
+                        <el-table-column prop="goodsprice" label="实际售价">
                         </el-table-column>
-                        <el-table-column prop="stockNum" label="入库">
+                        <el-table-column prop="stockNum" label="优惠">
                         </el-table-column>
-                        <el-table-column label="库存">
-                            <template slot-scope="scope">
-                                <span class="f-red"> {{ scope.row.stockNum - scope.row.saleNum }}</span>
-                            </template>
+                        <el-table-column label="退款" prop="tuikuan">
                         </el-table-column>
-                        <el-table-column prop="saleNum" label="已售">
+                        <el-table-column prop="saleTime" label="销售时间">
                         </el-table-column>
                         <el-table-column label="管理">
                             <template slot-scope="scope">
@@ -97,40 +98,30 @@
             data() {
                 return {
                     currentPage: 1, //当前页数
-                    total: 0,   //总页数
+                    total: 1,   //总页数
                     pageSize: 4, //每页条数
                     options: [],
                     search: {
                         soft: '',
                         keyWords: ''
                     },
-                    tableData: [],
+                    tableData: [
+                        {  order: '123456789',sum: 45,goodsprice: 23.00,stockNum: 2.00,tuikuan: 5,saleTime: '2018-11-11',},
+                        {  order: '456789123',sum: 35,goodsprice: 23.00,stockNum: 2.00,tuikuan: 5,saleTime: '2018-12-11',},
+                        {  order: '987654321',sum: 25,goodsprice: 23.00,stockNum: 2.00,tuikuan: 5,saleTime: '2016-11-11',},
+                        {  order: '654987321',sum: 15,goodsprice: 23.00,stockNum: 2.00,tuikuan: 5,saleTime: '2017-11-11',},
+                    ],
                 }
             },
             methods: {
                 onSubmit() {
-                    $.post('/goods/search',this.search,(data)=>{
-                        this.tableData = data;
-                    })
+
                 },
                 handleEdit(index, row) {
                     console.log(index, row);
                 },
                 handleDelete(index, row) {
                     console.log(index, row);
-                },
-                //渲染下拉框列表
-                getSoft() {
-                    $.get('/goods/getSoftList', (data) => {
-                        this.options = data;
-                    })
-                },
-                //渲染表格函数
-                getGoodsData() {
-                    let arr = { 'currentPage': this.currentPage, 'pageSize': this.pageSize }
-                    $.get('/goods/getGoods', arr, (data) => {
-                        this.tableData = data;
-                    });
                 },
                 //分页函数
                 handleSizeChange(val) {
@@ -143,14 +134,6 @@
                     this.getGoodsData();
                 }
             },
-            mounted() {
-                this.getSoft();
-                $.get('/goods/getGoodsLength', (data) => {
-                    this.total = data.total;
-                });
-                //加载第一页
-                this.getGoodsData();
-            }
         })
 
     </script>

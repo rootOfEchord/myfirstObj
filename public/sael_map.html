@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品管理</title>
+    <link rel="stylesheet" href="./css/elementui.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <script src="/users/checkUser"></script>
+</head>
+<style>
+</style>
+
+<body>
+    <div id="app">
+        <el-main>
+            <el-card class="box-card">
+                <!-- 卡片头部 -->
+                <div slot="header" class="clearfix">
+                    <span>出货统计</span>
+                </div>
+                <!-- 卡片身体 -->
+                <div class="text item">
+                    <div id="main" style="width: 100%;height: 600px;"></div>
+                </div>
+            </el-card>
+        </el-main>
+    </div>
+
+    <!-- 引入jq -->
+    <script src="./js/jquery-1.11.2.js"></script>
+    <!-- 引入vue -->
+    <script src="./js/vue.js"></script>
+    <!-- 引入elememtui -->
+    <script src="./js/elementui.js"></script>
+    <script src="./js/echarts.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    option: '',
+                }
+            },
+            mounted() {
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main'));
+
+                // 指定图表的配置项和数据
+                var option = {
+                    title: {
+                        text: '11月出货量单位(件)'
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: ['12-11-10', '12-11-11', '12-11-12', '12-11-13', '12-11-14', '12-11-15', '12-11-16']
+                    },
+                    yAxis: {
+                        type: 'value',
+                        color: ['#dd6b66', '#759aa0', '#e69d87', '#8dc1a9', '#ea7e53', '#eedd78', '#73a373', '#73b9bc', '#7289ab', '#91ca8c', '#f49f42'],
+                    },
+                    series: [{
+                        data: [43, 150, 77, 52, 58, 86, 67],
+                        type: 'line',
+                        symbolSize: 10, //设置各个拐点的大小
+                        symbol: 'circle', //设置拐点格式样式 如:实心圆，空心圆或不显示拐点等
+                        itemStyle:{
+                        normal:{
+                            color:'#4bb2c5',
+                            // borderColor:'',  //拐点边框颜色
+                        }
+                    },
+                    }]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            }
+        })
+
+    </script>
+</body>
+
+</html>

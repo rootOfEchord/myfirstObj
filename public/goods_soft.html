@@ -23,7 +23,9 @@
                 <div class="text item">
                     <template>
                         <el-table :data="tableData" stripe style="width: 100%">
-                            <el-table-column prop="goodsGroup" label="分类名称">
+                            <el-table-column prop="cg_name" label="分类名称">
+                            </el-table-column>
+                            <el-table-column prop="father_name" label="父类名称">
                             </el-table-column>
                             <el-table-column label="管理" width="180">
                                     <template slot-scope="scope">
@@ -49,18 +51,25 @@
         new Vue({
             el: '#app',
             data: {
-                tableData: [{
-                    goodsGroup: '护肤品',
-                }, {
-                    goodsGroup: '厨房用品',
-                },
-                {
-                    goodsGroup: '床上用品',
-                }],
+                tableData: [],
             },
             methods: {
                 handleEdit(index, row) {
-                    console.log(index, row);
+                    location.href = '/edit_soft.html?id='+row.cg_id;
+                }
+            },
+            mounted(){
+                $.get('/goods/getSoft',(data)=>{
+                    data.forEach(v => {
+                        if(!v.father_name){
+                            v.father_name = '顶级分类';
+                        }
+                    });
+                    this.tableData = data;
+                });
+                let msg = location.href.split('=')[1];
+                if(msg){
+                    this.$message({message: decodeURI(msg),type: 'success'});
                 }
             }
         })
