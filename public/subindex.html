@@ -37,11 +37,14 @@
                                 <!-- 身 -->
                                 <div class="text item">
                                     <template>
-                                        <el-table :data="tableData" stripe style="width: 100%">
-                                            <el-table-column prop="date" label="商品名称">
+                                        <el-table :data="tableData1" stripe style="width: 100%">
+                                            <el-table-column prop="goodsname" label="商品名称">
                                             </el-table-column>
-                                            <el-table-column prop="name" label="销量" width="116px">
+                                            <el-table-column prop="saleNum" label="销量" width="116px">
                                             </el-table-column>
+                                            <!-- <template slot-scope="scope">
+                                                <span class="f-red"> {{ scope.row.saleprice | formatPrice }}</span>
+                                            </template> -->
                                         </el-table>
                                     </template>
                                 </div>
@@ -54,18 +57,22 @@
                             <el-card class="box-card">
                                 <!-- 头 -->
                                 <div slot="header" class="clearfix">
-                                    <span>缺货的商品</span>
+                                    <span >缺货的商品</span>
                                 </div>
                                 <!-- 身 -->
                                 <div class="text item">
                                     <template>
-                                        <el-table :data="tableData" stripe style="width: 100%">
-                                            <el-table-column prop="date" label="商品名称">
+                                        <el-table :data="tableData2" stripe style="width: 100%">
+                                            <el-table-column prop="goodsname" label="商品名称">
                                             </el-table-column>
-                                            <el-table-column prop="name" label="库存" width="60px">
+                                            <el-table-column prop="stockNum" label="库存" width="100px">
                                             </el-table-column>
-                                            <el-table-column prop="del" label="操作" width="60px">
-
+                                            <el-table-column label="管理" width="100px">
+                                                <template slot-scope="scope" >
+                                                    <el-button type="primary" plain size="mini" @click="handleEdit(scope.$index, scope.row)">
+                                                        入库
+                                                    </el-button>
+                                                </template>
                                             </el-table-column>
                                         </el-table>
                                     </template>
@@ -91,31 +98,20 @@
         new Vue({
             el: '#app',
             data: {
-                name: '蒋劲',
-                tableData: [{
-                    date: '2016-05-02',
-                    name: 5,
-                    del: '入库'
-                }, {
-                    date: '2016-05-04',
-                    name: 7,
-                    del: '入库'
-                }, {
-                    date: '2016-05-01',
-                    name: 9,
-                    del: '入库'
-                }, {
-                    date: '2016-05-03',
-                    name: 88,
-                    del: '入库'
-                }]
+                name: '欢迎登陆华联超市管理系统, 祝你生活愉快',
+               tableData1: [],
+               tableData2: []
             },
 
 
             methods: {
-                fn() {
-                    alert(111)
-                }
+            },
+            mounted(){
+                $.get('/goods/getIndexInfo',(data)=>{
+                    console.log(data.tableData1)
+                    this.tableData1 = data.goodsList1;
+                    this.tableData2 = data.goodsList2;
+                })
             }
         })
     </script>

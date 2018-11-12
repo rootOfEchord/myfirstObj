@@ -136,6 +136,18 @@ router.post('/search', (req, res) => {
         if(err)  throw err ;
         res.send(result);
     })
+});
+//渲染首页的内容
+router.get('/getIndexInfo',(req,res)=>{
+    connection.query('select goodsname,saleNum from goodstable order by saleNum desc',(err,result)=>{
+        if(err) throw err;
+        let goodsList1 = result;
+        connection.query('select goodsname,stockNum from goodstable order by stockNum asc',(err,result)=>{
+            if(err) throw err;
+            res.send({'goodsList1': goodsList1,'goodsList2': result});
+        });
+    });
+    
 })
 
 

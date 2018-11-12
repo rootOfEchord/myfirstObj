@@ -28,52 +28,77 @@
                         <template slot="title">
                             <span>分类管理</span>
                         </template>
-                        <el-menu-item index="1-1"><a href="/goods_soft.html" target="mainContent">分类管理</a></el-menu-item>
-                        <el-menu-item index="1-2"><a href="/add_soft.html" target="mainContent">添加分类</a></el-menu-item>
+                        <el-menu-item index="1-1">
+                            <a href="/goods_soft.html" target="mainContent">分类管理</a>
+                        </el-menu-item>
+                        <el-menu-item index="1-2">
+                            <a href="/add_soft.html" target="mainContent">添加分类</a>
+                        </el-menu-item>
                     </el-submenu>
                     <el-submenu index="2">
                         <template slot="title">
                             <span>商品管理</span>
                         </template>
-                        <el-menu-item index="2-1"><a href="/goods_mange.html" target="mainContent">商品管理</a></el-menu-item>
-                        <el-menu-item index="2-2"><a href="/add_goods.html" target="mainContent">添加商品</a></el-menu-item>
+                        <el-menu-item index="2-1">
+                            <a href="/goods_mange.html" target="mainContent">商品管理</a>
+                        </el-menu-item>
+                        <el-menu-item index="2-2">
+                            <a href="/add_goods.html" target="mainContent">添加商品</a>
+                        </el-menu-item>
                     </el-submenu>
                     <el-submenu index="3">
                         <template slot="title">
                             <span>进货管理</span>
                         </template>
-                        <el-menu-item index="3-1"><a href="./store_manage.html" target="mainContent">库存管理</a></el-menu-item>
-                        <el-menu-item index="3-2"><a href="./goods_warehouse.html" target="mainContent">添加库存</a></el-menu-item>
+                        <el-menu-item index="3-1">
+                            <a href="./store_manage.html" target="mainContent">库存管理</a>
+                        </el-menu-item>
+                        <el-menu-item index="3-2">
+                            <a href="./goods_warehouse.html" target="mainContent">添加库存</a>
+                        </el-menu-item>
                     </el-submenu>
                     <el-submenu index="4">
                         <template slot="title">
                             <span>出货管理</span>
                         </template>
-                        <el-menu-item index="4-1"><a href="./sale_list.html" target="mainContent">销售列表</a></el-menu-item>
-                        <el-menu-item index="4-2"><a href="./sael_goods.html" target="mainContent">商品出库</a></el-menu-item>
+                        <el-menu-item index="4-1">
+                            <a href="./sale_list.html" target="mainContent">销售列表</a>
+                        </el-menu-item>
+                        <el-menu-item index="4-2">
+                            <a href="./sael_goods.html" target="mainContent">商品出库</a>
+                        </el-menu-item>
                         <el-menu-item index="4-3">商品退货</el-menu-item>
                     </el-submenu>
                     <el-submenu index="5">
                         <template slot="title">
                             <span>统计管理</span>
                         </template>
-                        <el-menu-item index="5-1"><a href="./sael_map.html" target="mainContent">销售统计</a></el-menu-item>
-                        <el-menu-item index="5-2"><a href="./stock_map.html" target="mainContent">进货统计</a></el-menu-item>
+                        <el-menu-item index="5-1">
+                            <a href="./sael_map.html" target="mainContent">销售统计</a>
+                        </el-menu-item>
+                        <el-menu-item index="5-2">
+                            <a href="./stock_map.html" target="mainContent">进货统计</a>
+                        </el-menu-item>
                     </el-submenu>
-                    <el-submenu index="6">
+                    <!-- <el-submenu index="6" ref="order">
                         <template slot="title">
                             <span>账号管理</span>
                         </template>
                         <el-menu-item index="6-1"><a href="/user_list.html" target="mainContent">账号管理</a></el-menu-item>
                         <el-menu-item index="6-2"><a href="/add_manage_account.html" target="mainContent">添加账号</a></el-menu-item>
                         <el-menu-item index="6-3"><a href="/edit_password.html" target="mainContent">修改密码</a></el-menu-item>
-                    </el-submenu>
+                    </el-submenu> -->
+                    <div id="box"></div>
                     <el-submenu index="7">
                         <template slot="title">
                             <span>会员管理</span>
                         </template>
-                        <el-menu-item index="7-1"><a href="/vip_list.html" target="mainContent">账号管理</a></el-menu-item>
-                        <el-menu-item index="7-2"><a href="/addVip.html" target="mainContent">添加账号</a></el-menu-item>
+                        <el-menu-item index="7-1">
+                            <a href="/vip_list.html" target="mainContent">账号管理</a>
+                        </el-menu-item>
+                        <el-menu-item index="7-2">
+                            <a href="/addVip.html" target="mainContent">添加账号</a>
+                        </el-menu-item>
                     </el-submenu>
                 </el-menu>
             </el-aside>
@@ -82,10 +107,10 @@
                 <!-- 右侧头部 -->
                 <el-header height="120px">
                     <h2>欢迎您 {{userName}}</h2>
-                    <p>查看详细的系统信息</p>
+                    <p @click="pp()">查看详细的系统信息</p>
                 </el-header>
                 <!-- 右侧主体 -->
-                    <iframe src="/subindex.html" frameborder="0" name="mainContent" width="100%" height="100%"></iframe>
+                <iframe src="/subindex.html" frameborder="0" name="mainContent" width="100%" height="100%"></iframe>
                 <!-- 右侧尾部 -->
                 <el-footer height="50px">&copy; Copyright 2018 华联超市管理系统</el-footer>
             </el-container>
@@ -100,22 +125,50 @@
 
     <script src="./js/elementui.js"></script>
     <script>
-        new Vue({
+        let indexVue = new Vue({
             el: '#app',
-            data:{
+            data: {
                 userName: 'admin'
             },
-            mounted(){
-                $.get('/users/getUserInfo',(data)=>{
+            mounted() {
+                $.get('/users/getUserInfo', (data) => {
                     this.userName = decodeURI(data.userName);
                     //首次登录弹出框
                     let msg = location.href.split('=')[1];
-                    if(msg){
-                        this.$message({ message: decodeURI(msg)+'欢迎您, '+this.userName, type:'success' , center: true });
+                    if (msg) {
+                        this.$message({ message: decodeURI(msg) + '欢迎您, ' + this.userName, type: 'success', center: true });
                     }
                 });
+
+            },
+            methods: {
+                // pp(){
+                // console.log(this.$refs.order)
+                //     this.$refs.order.style.display = 'none'
+                // }
+               
+            },
+            created() {
+                console.log($('#box'))
+                let grop = decodeURI(document.cookie.split('=')[3])
+                if (grop === '超级管理员') {
+                    let hl = `<el-submenu index="6" ref="order">
+                        <template slot="title">
+                            <span>账号管理</span>
+                        </template>
+                        <el-menu-item index="6-1"><a href="/user_list.html" target="mainContent">账号管理</a></el-menu-item>
+                        <el-menu-item index="6-2"><a href="/add_manage_account.html" target="mainContent">添加账号</a></el-menu-item>
+                        <el-menu-item index="6-3"><a href="/edit_password.html" target="mainContent">修改密码</a></el-menu-item>
+                    </el-submenu>`;
+                    $('#box').html(hl);
+                }
             }
         });
+        window.indexVue = indexVue;
+        //跨越访问代码 edit_password 页面还有两句
+        let parentDomain = window.location.hostname;
+        console.log("domain", parentDomain); //localhost
+        document.domain = parentDomain;
     </script>
 </body>
 
