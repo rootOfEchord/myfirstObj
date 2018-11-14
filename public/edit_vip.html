@@ -80,6 +80,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         $.post('/users/getArea', (data) => {
             console.dir(data)
             app.options2 = data;
@@ -131,7 +135,7 @@
                             //向后台发送表单数据
                             $.post('/users/addVip', this.ruleForm2, (data) => {
                                 //弹出提示框
-                                this.open(data)
+                                topVue.open(data)
                                 if (data) {
                                     //成功,重置表单
                                     this.resetForm('ruleForm2');
@@ -139,7 +143,7 @@
                             })
                         } else {
                             //提示框
-                            this.open({isOk: false,msg: '添加失败,请检查'});
+                            topVue.open({ isOk: false, msg: '添加失败,请检查' });
                             return false;
                         }
                     });
@@ -148,14 +152,6 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 },
-                //弹出框函数
-                open(data){
-                    this.$message({ 
-                        message: data.msg, 
-                        type: data.isOk ? 'success' : 'error', 
-                        center: true 
-                    });
-                }
             }
         })
 

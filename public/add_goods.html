@@ -93,6 +93,10 @@
 
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -134,7 +138,7 @@
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             $.post('/goods/addGoods',this.ruleForm2,(data)=>{
-                                this.open(data);
+                                topVue.open(data);
                                 if(data.isOk){
                                     this.resetForm('ruleForm2');
                                 }
@@ -158,9 +162,6 @@
                     this.ruleForm2.goodsPrice = parseFloat(this.ruleForm2.goodsPrice).toFixed(2);
                     this.ruleForm2.marketPrice = (this.ruleForm2.goodsPrice*1.3).toFixed(2);
                     this.ruleForm2.salePrice = (this.ruleForm2.goodsPrice*1.2).toFixed(2);
-                },
-                open(data) {
-                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
                 },
                 getBarCode(){
                     this.ruleForm2.barCode = new Date().getTime();

@@ -80,6 +80,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //看不懂下面两句(跨域访问)
+         let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -111,7 +115,7 @@
                                 //生成一个表格对象 push到tableData中
                                 let subTable = {'goodsname':data[0].goodsname ,'saelNum': this.ruleForm2.saelNum,'saleprice': data[0].saleprice,'barcode': this.ruleForm2.barcode};
                                 this.tableData.push(subTable);
-                                this.open({isOk: true,msg: '添加成功'});
+                                top.indexVue.open({isOk: true,msg: '添加成功'});
                                 this.resetForm('ruleForm2');
                                 //渲染总价
                                 let allPrice = 0;
@@ -121,7 +125,8 @@
                                 this.allPrice = allPrice;
                             })
                         } else {
-                            console.log('error submit!!');
+                            // top.indexVue.open({isOk: true,msg: '失败'});
+                            topVue.open({isOk: true,msg: '添加失败'})
                             return false;
                         }
                     });
@@ -129,15 +134,15 @@
                 //提交订单
                 shopping(){
                     //将商品表格发给后台
-                    $.ajaxSettings.async = false;
+                    $.ajaxSettings.async = false; //将ajax设为同步请求
                     this.tableData.forEach(v=>{
                         $.post('/goods/shop',v,(data)=>{
                             if(!data.isOk){
-                                this.open({isOk: false,msg: '提交失败'});
+                                topVue.open({isOk: false,msg: '提交失败'});
                             }
                         })
                     });
-                    this.open({isOk: false,msg: '提交失败'});
+                    topVue.open({isOk: true,msg: '提交成功'});
                     $.ajaxSettings.async = true;
                 },
                 //重置表单
@@ -145,9 +150,7 @@
                     this.$refs[formName].resetFields();
                 },
                 // 弹出提示框函数
-                open(data) {
-                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
-                },
+               
             },
             filters: {
                 //过滤器做一个管道格式化价格

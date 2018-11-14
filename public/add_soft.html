@@ -27,7 +27,7 @@
                     <el-form :model="ruleForm2" status-icon :rules="rules2" ref="ruleForm2" label-width="100px" class="demo-ruleForm" :label-position="labelPosition">
                         <el-form-item label="所属分类">
                             <el-select v-model="ruleForm2.cg_fatherID" placeholder="请选择">
-                                <el-option v-for="item in options"  :label="item.cg_name" :value="item.cg_id" :key="item.cg_id">
+                                <el-option v-for="item in options" :label="item.cg_name" :value="item.cg_id" :key="item.cg_id">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -57,6 +57,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -85,7 +89,7 @@
                         if (valid) {
                             //验证成功后向后台发送ajax
                             $.post('/goods/addSoft', this.ruleForm2, (data) => {
-                                this.open(data);
+                                topVue.open(data);
                                 if (data.isOk) {
                                     this.resetForm('ruleForm2');
                                     this.options = [{ cg_id: '0', cg_name: '---顶级分类---' }]
@@ -101,17 +105,9 @@
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 },
-                //弹出框函数
-                open(data) {
-                    this.$message({
-                        message: data.msg,
-                        type: data.isOk ? 'success' : 'error',
-                        center: true
-                    });
-                },
                 //渲染下拉框
-                getSoft(){
-                    $.get('/goods/getSoftList',(data)=>{
+                getSoft() {
+                    $.get('/goods/getSoftList', (data) => {
                         this.options.push(...data);
                     })
                 }

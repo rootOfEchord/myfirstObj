@@ -61,6 +61,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -113,7 +117,7 @@
                                 //验证成功后向后台发送ajax
                                 $.post('/users/addManageAccount', this.ruleForm2, (data) => {
                                     //弹出提示框
-                                    this.open(data)
+                                    topVue.open(data)
                                     if (data) {
                                         //成功清空表单
                                         this.resetForm('ruleForm2');
@@ -121,22 +125,18 @@
                                 })
                             } else {
                                 //提示框
-                                this.open({ isOk: false, msg: '添加失败请检查' });
+                                topVue.open({ isOk: false, msg: '添加失败请检查' });
                                 return false;
                             }
                         });
-                    }else{
-                        this.open({isOk: false,msg: '您没有该权限'});
+                    } else {
+                        topVue.open({ isOk: false, msg: '您没有该权限' });
                     }
                 },
                 //清空表单函数
                 resetForm(formName) {
                     this.$refs[formName].resetFields();
                 },
-                //弹出提示框函数
-                open(data) {
-                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
-                }
 
             },
             mounted() {

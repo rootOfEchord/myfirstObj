@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="./css/elementui.css">
     <link rel="stylesheet" href="./css/index.css">
     <script src="/users/checkUser"></script>
+    <style>
+        .el-button--mini, .el-button--mini.is-round{
+            position: absolute;
+            top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -105,6 +111,9 @@
 
 
             methods: {
+                handleEdit(){
+                    console.log('???????',top)
+                }
             },
             mounted(){
                 $.get('/goods/getIndexInfo',(data)=>{

@@ -60,6 +60,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -113,30 +117,26 @@
                             //验证成功后向后台发送ajax
                             $.post('/users/editManageAccount', this.ruleForm2, (data) => {
                                 //弹出提示框
-                                this.open(data)
+                                topVue.open(data)
                                 if (data) {
                                     //成功跳转页面
-                                    location.href = '/user_list.html?msg='+data.msg;
+                                    location.href = '/user_list.html';
                                 }
                             })
                         } else {
                             //提示框
-                            this.open({isOk:false,msg: '修改失败请检查'})
+                            topVue.open({ isOk: false, msg: '修改失败请检查' })
                             return false;
                         }
                     });
                 },
-                //弹出提示框函数
-                open(data){
-                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
-                }
 
             },
-            mounted(){
+            mounted() {
                 //获取上个页面传来的id
                 let id = location.href.split('=')[1];
                 //向后台发ajax获取该条数据
-                $.get('/users/getDataById',{id},(data)=>{
+                $.get('/users/getDataById', { id }, (data) => {
                     data = data[0];
                     //渲染表单
                     this.ruleForm2.userName = data.userName;

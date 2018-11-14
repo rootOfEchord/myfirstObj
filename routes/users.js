@@ -28,11 +28,35 @@ router.post('/verifyUser', (req, res) => {
 		}
 	});
 });
+//用户权限
+router.get('/getHtmlText',(req,res)=>{
+	let group = req.cookies.group;
+	console.log(group)
+	if(group === "超级管理员"){
+		let htmlText = `<el-submenu index="6" ref="order">
+							<template slot="title">
+								<span>账号管理</span>
+							</template>
+							<el-menu-item index="6-1"><a href="/user_list.html" target="mainContent">账号管理</a></el-menu-item>
+							<el-menu-item index="6-2"><a href="/add_manage_account.html" target="mainContent">添加账号</a></el-menu-item>
+							<el-menu-item index="6-3"><a href="/edit_password.html" target="mainContent">修改密码</a></el-menu-item>
+						</el-submenu>`;
+		res.send({ htmlText})
+	}else{
+		let htmlText = `<el-submenu index="6" ref="order">
+							<template slot="title">
+								<span>账号管理</span>
+							</template>
+							<el-menu-item index="6-3"><a href="/edit_password.html" target="mainContent">修改密码</a></el-menu-item>
+						</el-submenu>`;
+		res.send({htmlText})
+	}
+})
 //退出登录
 router.get('/lognOut', (req, res) => {
 	res.clearCookie('userName');
 	res.clearCookie('userId');
-	res.clearCookie('group')
+	res.clearCookie('group');
 	res.redirect('/lognin.html');
 });
 //防火墙
@@ -63,9 +87,12 @@ router.post('/editPwd', (req, res) => {
 			connection.query(sqlStr, [newPwd, id], (err, result) => {
 				if (err) throw err;
 				if (result.affectedRows > 0) {
-					res.send({ isOk: true, msg: '修改成功' })
+					res.clearCookie('userName');
+					res.clearCookie('userId');
+					res.clearCookie('group');
+					res.send({ isOk: true, msg: '修改成功' });
 				} else {
-					res.send({ isOk: false, msg: '修改失败' })
+					res.send({ isOk: false, msg: '修改失败' });
 				}
 			});
 		} else {//密码错误

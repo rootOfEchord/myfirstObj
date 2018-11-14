@@ -23,7 +23,7 @@
                         <el-input type="text" v-model="ruleForm2.userName"></el-input>
                     </el-form-item>
                     <el-form-item label="管理员密码" prop="userPwd">
-                        <el-input type="password" v-model="ruleForm2.userPwd" autocomplete="off"></el-input>
+                        <el-input type="password" v-model="ruleForm2.userPwd" autocomplete="off" @keydown.enter.native ="submitForm('ruleForm2')" ></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="submitForm('ruleForm2')">登录</el-button>

@@ -142,26 +142,20 @@
 
             },
             methods: {
-                // pp(){
-                // console.log(this.$refs.order)
-                //     this.$refs.order.style.display = 'none'
-                // }
-               
+              pp(){
+              console.log(this.$refs.order)
+                 this.$refs.order.style.display = 'none'
+               },
+                open(data) {
+                    this.$message({ message: data.msg, type: data.isOk ? 'success' : 'error', center: true });
+                },
             },
             created() {
-                console.log($('#box'))
-                let grop = decodeURI(document.cookie.split('=')[3])
-                if (grop === '超级管理员') {
-                    let hl = `<el-submenu index="6" ref="order">
-                        <template slot="title">
-                            <span>账号管理</span>
-                        </template>
-                        <el-menu-item index="6-1"><a href="/user_list.html" target="mainContent">账号管理</a></el-menu-item>
-                        <el-menu-item index="6-2"><a href="/add_manage_account.html" target="mainContent">添加账号</a></el-menu-item>
-                        <el-menu-item index="6-3"><a href="/edit_password.html" target="mainContent">修改密码</a></el-menu-item>
-                    </el-submenu>`;
-                    $('#box').html(hl);
-                }
+                $.ajaxSettings.async = false;
+                $.get('/users/getHtmlText',(data)=>{
+                    $('#box').html(data.htmlText);
+                });
+                $.ajaxSettings.async = true;
             }
         });
         window.indexVue = indexVue;

@@ -50,6 +50,10 @@
     <!-- 引入elememtui -->
     <script src="./js/elementui.js"></script>
     <script>
+        //得到顶级vue实例
+        let childDomain = document.domain;
+        document.domain = childDomain;
+        window.topVue = top.indexVue;
         new Vue({
             el: '#app',
             data() {
@@ -66,7 +70,7 @@
                         location.href = '/edit_manage_account.html?userid='+row.id;
                         location.hash = row.id;
                     }else{
-                        this.open({isOk: false,msg: '您没有该权限'});
+                        topVue.open({isOk: false,msg: '您没有该权限'});
                     }
                 },
                 //删除用户
@@ -74,7 +78,7 @@
                     if(this.userGroup === '超级管理员'){
                         $.get('/users/delUser/' + row.id, (data) => {
                             //弹出提示框
-                            this.open(data);
+                            topVue.open(data);
                             if (data.isOk) {
                                 //成功 刷新表格
                                 this.getUserList();
@@ -82,7 +86,7 @@
                             }
                         })
                     }else{
-                        this.open({isOk: false,msg: '您没有该权限'});
+                        topVue.open({isOk: false,msg: '您没有该权限'});
                     }
                 },
                 //渲染表格函数
@@ -91,18 +95,10 @@
                     this.tableData = data;
                     })
                 },
-                open(data){
-                    this.$message({ message: decodeURI(data.msg), type: data.isOk? 'success':'error' , center: true });
-                }
             },
             mounted() {
                 //渲染表格
                 this.getUserList();
-                //接收上个页面的参数并弹出提示框
-                let msg = location.href.split('=')[1];
-                if(msg){
-                    this.open({mag: decodeURI(msg),isOk: true});
-                }
                 //获取用户等级
                 $.get('/users/getUserInfo',(data)=>{
                     this.userGroup = decodeURI(data.group);
